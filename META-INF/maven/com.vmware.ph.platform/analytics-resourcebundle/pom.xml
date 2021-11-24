@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>com.vmware.ph.platform</groupId>
+      <artifactId>phservice</artifactId>
+      <version>dev</version>
+   </parent>
+
+   <artifactId>analytics-resourcebundle</artifactId>
+   <version>${product.version}</version>
+   <packaging>jar</packaging>
+   <description>
+     Resource Bundle with resources for localization, etc.
+   </description>
+
+   <dependencies>
+       <!-- TEST -->
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <!-- End of TEST -->
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin><!-- build effective_pom.xml-->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-help-plugin</artifactId>
+         </plugin>
+
+         <plugin><!-- build effective_pom_filtered.xml-->
+            <groupId>com.vmware.ph.maven.plugins</groupId>
+            <artifactId>xml-filter-maven-plugin</artifactId>
+         </plugin>
+      </plugins>
+   </build>
+</project>

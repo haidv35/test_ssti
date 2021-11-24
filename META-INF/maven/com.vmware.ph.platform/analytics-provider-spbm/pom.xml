@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>com.vmware.ph.platform</groupId>
+      <artifactId>phservice</artifactId>
+      <version>dev</version>
+   </parent>
+
+   <artifactId>analytics-provider-spbm</artifactId>
+   <name>analytics-provider-spbm</name>
+   <version>${product.version}</version>
+   <packaging>jar</packaging>
+   <description>Analytics provider for Storage Policy Based Management</description>
+
+   <dependencies>
+      <!-- Provider API -->
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-common-vim</artifactId>
+         <version>${product.version}</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- End of Provider API -->
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>sms-vmodl-bindings</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>pbm-vmodl-bindings</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+      <!-- End of Storage API Dependency -->
+
+      <!-- Logging -->
+      <dependency>
+         <groupId>commons-lang</groupId>
+         <artifactId>commons-lang</artifactId>
+      </dependency>
+      <!-- End of Logging -->
+
+      <!-- Unit Test Dependency -->
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-all</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- End of Test Dependency -->
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin><!-- build *-sources.jar -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+         </plugin>
+
+         <plugin><!-- build effective_pom.xml -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-help-plugin</artifactId>
+         </plugin>
+
+         <plugin><!-- build effective_pom_filtered.xml -->
+            <groupId>com.vmware.ph.maven.plugins</groupId>
+            <artifactId>xml-filter-maven-plugin</artifactId>
+         </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+         </plugin>
+      </plugins>
+   </build>
+</project>

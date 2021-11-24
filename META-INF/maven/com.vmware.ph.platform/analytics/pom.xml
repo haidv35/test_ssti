@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>com.vmware.ph.platform</groupId>
+      <artifactId>phservice</artifactId>
+      <version>dev</version>
+   </parent>
+
+   <artifactId>analytics</artifactId>
+   <version>${product.version}</version>
+   <packaging>jar</packaging>
+   <description>VMware Analytics Library</description>
+
+   <dependencies>
+
+      <!-- Analytics Proxy, CEIP, collector, dataapp and PUSH telemetry projects -->
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-proxy</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-ceip</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-cloud-dataapp</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-collector</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-push-telemetry</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <!-- Analytics common projects  -->
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-cdf</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-cis</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-ph</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-vapi</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-vim</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-vmomi</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-vsan</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <!-- Analytics provider common projects -->
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-common</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-common-vapi</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-common-vim</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-common-vmomi</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <!-- Analytics ESX and vcenter provider projects -->
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-esx</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-vcenter</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <!-- Analytics internal data service projects -->
+
+      <dependency>
+         <groupId>com.vmware.cis.data</groupId>
+         <artifactId>ds-core</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.cis.data</groupId>
+         <artifactId>ds-adapters</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.cis.data</groupId>
+         <artifactId>ds-provider-vmodl1</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.cis.data</groupId>
+         <artifactId>ds-provider-vmodl1-versions</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <!-- Determines the name of the fat jar and the sources jar -->
+      <finalName>${project.artifactId}</finalName>
+      <plugins>
+
+         <!--
+            Create fat JAR from the dependent projects. Each project in the dependencies
+            section needs to be explicitly added to the "includes" section below. This
+            guarantees that the packages added to the fat jar will be only the ones from
+            the dependent project artifacts.
+         -->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <executions>
+               <execution>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>shade</goal>
+                  </goals>
+                  <configuration>
+                     <!-- Create a POM for the fat jar. -->
+                     <createDependencyReducedPom>true</createDependencyReducedPom>
+                     <dependencyReducedPomLocation>${project.build.directory}/${project.artifactId}.xml</dependencyReducedPomLocation>
+                     <!--
+                        Substitutes the dependent projects with their transitive
+                        dependencies inside the reduced POM.
+                     -->
+                     <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+                     <!--
+                        Once the "promoteTransitiveDependencies" is set to true, all of
+                        the projects listed in the "dependencies" section above will now
+                        be treated by the shade plugin as though they are with scope
+                        "provided". As a result, the reduced POM will contain both the
+                        transitive dependencies with scope "compile" and the projects
+                        from the dependencies section with scope "provided". In order to
+                        remove any reference to those projects in the reduced POM, the
+                        "keepDependenciesWithProvidedScope" needs to be set to false.
+                     -->
+                     <keepDependenciesWithProvidedScope>false</keepDependenciesWithProvidedScope>
+                     <!--
+                        A minimized JAR maintains only the packages of the transitive
+                        dependencies. We do not want the fat jar to contain the transitive
+                        dependencies - we want the dependent project packages.
+                     -->
+                     <minimizeJar>false</minimizeJar>
+                     <shadedArtifactAttached>false</shadedArtifactAttached>
+                     <!--
+                        Every dependent project needs to produce a source JAR. All the
+                        source JARs are bundled together into a single source JAR.
+                     -->
+                     <createSourcesJar>true</createSourcesJar>
+                     <artifactSet>
+                        <includes>
+                           <include>com.vmware.ph.platform:analytics-proxy</include>
+                           <include>com.vmware.ph.platform:analytics-ceip</include>
+                           <include>com.vmware.ph.platform:analytics-cloud-dataapp</include>
+                           <include>com.vmware.ph.platform:analytics-collector</include>
+                           <include>com.vmware.ph.platform:analytics-push-telemetry</include>
+
+                           <include>com.vmware.ph.platform:analytics-common</include>
+                           <include>com.vmware.ph.platform:analytics-common-cdf</include>
+                           <include>com.vmware.ph.platform:analytics-common-cis</include>
+                           <include>com.vmware.ph.platform:analytics-common-ph</include>
+                           <include>com.vmware.ph.platform:analytics-common-vapi</include>
+                           <include>com.vmware.ph.platform:analytics-common-vim</include>
+                           <include>com.vmware.ph.platform:analytics-common-vmomi</include>
+                           <include>com.vmware.ph.platform:analytics-common-vsan</include>
+
+                           <include>com.vmware.ph.platform:analytics-provider-common</include>
+                           <include>com.vmware.ph.platform:analytics-provider-common-vapi</include>
+                           <include>com.vmware.ph.platform:analytics-provider-common-vim</include>
+                           <include>com.vmware.ph.platform:analytics-provider-common-vmomi</include>
+
+                           <include>com.vmware.ph.platform:analytics-provider-esx</include>
+                           <include>com.vmware.ph.platform:analytics-provider-vcenter</include>
+
+                           <include>com.vmware.cis.data:ds-adapters</include>
+                           <include>com.vmware.cis.data:ds-core</include>
+                        </includes>
+                     </artifactSet>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
+         <plugin><!-- Filter reduced POM -->
+            <groupId>com.vmware.ph.maven.plugins</groupId>
+            <artifactId>xml-filter-maven-plugin</artifactId>
+            <configuration>
+               <!-- The filtered POM is the reduced POM generated by the shade plugin. -->
+               <targetXmlFile>${project.build.directory}/${project.artifactId}.xml</targetXmlFile>
+               <!--
+                  The elements below need to be removed to make the filtered POM
+                  self-sufficient. These properties will not need to be changed when new
+                  projects are added to the fatjar.
+               -->
+               <elementsToRemove>
+                  <element>/project/properties</element>
+                  <element>/project/parent</element>
+                  <element>/project/dependencyManagement</element>
+                  <element>/project/dependencies/dependency[scope="test"]</element>
+                  <element>/project/reporting</element>
+                  <element>/project/build</element>
+                  <element>/project/pluginRepositories</element>
+                  <element>/project/repositories</element>
+                  <element>//comment()</element>
+               </elementsToRemove>
+               <elementsToSetValueTo>
+                  <!--
+                     The version is not resolved in the reduced POM file. As a result, it
+                     is explicitly resolved during the filtering process.
+                  -->
+                  <element>/project/version|${product.version}</element>
+               </elementsToSetValueTo>
+               <!--
+                  During the build process, it is expected that each project contains a
+                  POM named effective_pom_filtered.xml.
+               -->
+               <outputFile>${project.build.directory}/effective_pom_filtered.xml</outputFile>
+            </configuration>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>filter</goal>
+                  </goals>
+                  <phase>package</phase>
+               </execution>
+            </executions>
+         </plugin>
+
+      </plugins>
+   </build>
+</project>

@@ -1,0 +1,95 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <groupId>com.vmware.ph.platform</groupId>
+      <artifactId>phservice</artifactId>
+      <version>dev</version>
+   </parent>
+
+   <artifactId>analytics-common-vim</artifactId>
+   <version>${product.version}</version>
+   <packaging>jar</packaging>
+   <description>Analytics vim common libraries</description>
+
+   <dependencies>
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-vmomi</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-cis</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>vim-vmodl-bindings</artifactId>
+         <version>${product.version}</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.cis.data</groupId>
+         <artifactId>ds-provider-vmodl1</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <!-- Afd -->
+
+      <dependency>
+         <groupId>com.vmware.af</groupId>
+         <artifactId>vmware-authentication-framework</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- End of Afd -->
+
+      <!-- TEST -->
+
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-core</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- End of TEST -->
+
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin><!-- build *-sources.jar-->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+         </plugin>
+         <plugin><!-- build effective_pom.xml-->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-help-plugin</artifactId>
+         </plugin>
+         <plugin><!-- build effective_pom_filtered.xml-->
+            <groupId>com.vmware.ph.maven.plugins</groupId>
+            <artifactId>xml-filter-maven-plugin</artifactId>
+         </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+         </plugin>
+      </plugins>
+   </build>
+</project>

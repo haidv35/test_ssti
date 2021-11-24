@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+definition must contain the following nodes:
+- model: indicates the model the property belongs to
+- property: indicates the name of the property
+- type: indicates how the value associated with property should be interpreted:
+  string, int, long, boolean, or id (corresponding to managedObjectReference-s)
+
+If the property cannot be used under its actual name for selection in xQeury
+node 'selectExpression' is specified. For example, assuming that we that
+property xyz needs to be selected from model ABC and it is a computed property,
+then the expression here will be used for selection instead.
+
+If the property cannot be used directly for filtering, i.e. /ABC[xyz = value],
+but requires extra computations, then either a 'filterTemplate' node, or
+a 'filterExpression' may be specified:
+- filterExpression is used for replacing xyz in /ABC[xyz = value], turning it
+  into /ABC[filterExpression = value]
+- filterTemplate is used for more complex expressions that involve filtering
+  on foreign keys (inverse relations basically)
+-->
+<properties>
+  <definition>
+    <model>VirtualMachine</model>
+    <property>dc</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType_vAppStyle($target[node-name(.)=xs:QName("VirtualMachine")], xs:QName("Datacenter")), "dc")]]></selectExpression>
+    <filterTemplate><![CDATA[local:getDescendantVms_Dc(%s)]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>VirtualMachine</model>
+    <property>isNormalVMOrPrimaryFTVM</property>
+    <type>boolean</type>
+    <selectExpression><![CDATA[(not($target/config) or (not($target/config/ftInfo/role > 1) and $target/config/template = false()))]]></selectExpression>
+    <filterExpression><![CDATA[(not(config) or (not(config/ftInfo/role > 1) and config/template = false()))]]></filterExpression>
+  </definition>
+
+  <definition>
+    <model>VirtualMachine</model>
+    <property>cluster</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType((/ResourcePool[@qs:id=$target/resourcePool/@xlink:href], /VirtualApp[@qs:id=$target/resourcePool/@xlink:href]), xs:QName("ClusterComputeResource")), "cluster")]]></selectExpression>
+    <filterTemplate><![CDATA[local:getDescendantVms_Cr(%s)]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>VirtualMachine</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/VirtualMachine[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>VirtualMachine</model>
+    <property>resourcePool</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/VirtualMachine[@qs:id=%s/vm/@xlink:href]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>VirtualMachine</model>
+    <property>config/hardware/numCPU</property>
+    <type>int</type>
+  </definition>
+
+  <definition>
+    <model>VirtualMachine</model>
+    <property>config/hardware/memoryMB</property>
+    <type>int</type>
+  </definition>
+
+  <definition>
+    <model>VirtualMachine</model>
+    <property>runtime/host</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/VirtualMachine[vim25:runtime/vim25:host/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>VirtualMachine</model>
+    <property>environmentBrowser</property>
+    <type>id</type>
+  </definition>
+
+  <definition>
+    <model>ClusterComputeResource</model>
+    <property>configurationEx/dasConfig/enabled</property>
+    <type>boolean</type>
+  </definition>
+
+  <definition>
+    <model>ClusterComputeResource</model>
+    <property>configurationEx/drsConfig/enabled</property>
+    <type>boolean</type>
+  </definition>
+
+  <definition>
+    <model>ClusterComputeResource</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/ClusterComputeResource[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>ClusterComputeResource</model>
+    <property>resourcePool</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/ClusterComputeResource[vim25:resourcePool/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>ClusterComputeResource</model>
+    <property>dc</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType($target[node-name(.)=xs:QName("ClusterComputeResource")], xs:QName("Datacenter")), "dc")]]></selectExpression>
+    <filterTemplate><![CDATA[local:getComputeResourceDescendants(%s, xs:QName("ClusterComputeResource"))]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>ComputeResource</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/ComputeResource[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>Datacenter</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/Datacenter[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>Datacenter</model>
+    <property>hostFolder</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/Datacenter[vim25:hostFolder/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>Datastore</model>
+    <property>summary/accessible</property>
+    <type>boolean</type>
+  </definition>
+
+  <definition>
+    <model>Datastore</model>
+    <property>summary/freeSpace</property>
+    <type>long</type>
+  </definition>
+
+  <definition>
+    <model>Datastore</model>
+    <property>summary/capacity</property>
+    <type>long</type>
+  </definition>
+
+  <definition>
+    <model>Datastore</model>
+    <property>summary/multipleHostAccess</property>
+    <type>boolean</type>
+  </definition>
+
+  <definition>
+    <model>Datastore</model>
+    <property>capability/perFileThinProvisioningSupported</property>
+    <type>boolean</type>
+  </definition>
+
+  <definition>
+    <model>Datastore</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/Datastore[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>Datastore</model>
+    <property>dc</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType($target[node-name(.)=xs:QName("Datastore")], xs:QName("Datacenter")), "dc")]]></selectExpression>
+    <filterTemplate><![CDATA[/Datastore[@qs:id=%s/datastore/@xlink:href]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>DistributedVirtualPortgroup</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/DistributedVirtualPortgroup[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>DistributedVirtualPortgroup</model>
+    <property>dc</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType($target[node-name(.)=xs:QName("DistributedVirtualPortgroup")], xs:QName("Datacenter")), "dc")]]></selectExpression>
+    <filterTemplate><![CDATA[/DistributedVirtualPortgroup[@qs:id=%s/network/@xlink:href]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>Folder</model>
+    <property>isRootFolder</property>
+    <type>boolean</type>
+    <selectExpression><![CDATA[$target/@qs:id = local:product('vpx')/ServiceInstance/content/rootFolder/@xlink:href]]></selectExpression>
+    <filterExpression><![CDATA[(@qs:id = local:product('vpx')/ServiceInstance/content/rootFolder/@xlink:href)]]></filterExpression>
+  </definition>
+
+  <definition>
+    <model>Folder</model>
+    <property>childType</property>
+    <type>string</type>
+    <multipleCardinality>true</multipleCardinality>
+  </definition>
+
+  <definition>
+    <model>Folder</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/Folder[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>Folder</model>
+    <property>dc</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType($target[node-name(.)=xs:QName("Folder")], xs:QName("Datacenter")), "dc")]]></selectExpression>
+    <filterTemplate><![CDATA[local:getDescendantsOfType(%s, xs:QName("Folder"))]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>Folder</model>
+    <property>isDatastoreFolder</property>
+    <type>boolean</type>
+    <selectExpression><![CDATA[$target/childType = 'Datastore']]></selectExpression>
+    <filterExpression><![CDATA[(childType = 'Datastore')]]></filterExpression>
+  </definition>
+
+  <definition>
+    <model>Folder</model>
+    <property>isDatacenterFolder</property>
+    <type>boolean</type>
+    <selectExpression><![CDATA[$target/childType = 'Datacenter']]></selectExpression>
+    <filterExpression><![CDATA[(childType = 'Datacenter')]]></filterExpression>
+  </definition>
+
+  <definition>
+    <model>Folder</model>
+    <property>isComputeResourceFolder</property>
+    <type>boolean</type>
+    <selectExpression><![CDATA[$target/childType = 'ComputeResource']]></selectExpression>
+    <filterExpression><![CDATA[(childType = 'ComputeResource')]]></filterExpression>
+  </definition>
+
+  <definition>
+    <model>Folder</model>
+    <property>isNetworkFolder</property>
+    <type>boolean</type>
+    <selectExpression><![CDATA[$target/childType = 'Network']]></selectExpression>
+    <filterExpression><![CDATA[(childType = 'Network')]]></filterExpression>
+  </definition>
+
+  <definition>
+    <model>Folder</model>
+    <property>isVirtualMachineFolder</property>
+    <type>boolean</type>
+    <selectExpression><![CDATA[$target/childType = 'VirtualMachine']]></selectExpression>
+    <filterExpression><![CDATA[(childType = 'VirtualMachine')]]></filterExpression>
+  </definition>
+
+  <definition>
+    <model>HostSystem</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/HostSystem[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>HostSystem</model>
+    <property>dc</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType($target[node-name(.)=xs:QName("HostSystem")], xs:QName("Datacenter")), "dc")]]></selectExpression>
+    <filterTemplate><![CDATA[local:getDescendantsOfType(%s, xs:QName("HostSystem"))]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>HostSystem</model>
+    <property>isStandalone</property>
+    <type>boolean</type>
+    <selectExpression><![CDATA[($target/parent/@xlink:href=local:product('vpx')/ComputeResource/@qs:id) and not($target/parent/@xlink:href=local:product('vpx')/ClusterComputeResource/@qs:id)]]></selectExpression>
+    <filterExpression><![CDATA[(parent/@xlink:href=local:product('vpx')/ComputeResource/@qs:id and not(parent/@xlink:href=local:product('vpx')/ClusterComputeResource/@qs:id))]]></filterExpression>
+  </definition>
+
+  <definition>
+    <model>Network</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/Network[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>Network</model>
+    <property>dc</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType($target[node-name(.)=xs:QName("Network")], xs:QName("Datacenter")), "dc")]]></selectExpression>
+    <filterTemplate><![CDATA[local:getDescendantsOfType(%s, xs:QName("Network"))]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>OpaqueNetwork</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/OpaqueNetwork[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>OpaqueNetwork</model>
+    <property>dc</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType($target[node-name(.)=xs:QName("OpaqueNetwork")], xs:QName("Datacenter")), "dc")]]></selectExpression>
+    <filterTemplate><![CDATA[local:getDescendantsOfType(%s, xs:QName("OpaqueNetwork"))]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>ResourcePool</model>
+    <property>isRootRP</property>
+    <type>boolean</type>
+    <selectExpression><![CDATA[node-name($target)= QName('urn:vim25','ResourcePool') and $target/@qs:id = (local:product('vpx')/ComputeResource/resourcePool/@xlink:href, local:product('vpx')/ClusterComputeResource/resourcePool/@xlink:href)]]></selectExpression>
+    <filterExpression><![CDATA[node-name(.)= QName('urn:vim25','ResourcePool') and (@qs:id = (local:product('vpx')/ComputeResource/resourcePool/@xlink:href, local:product('vpx')/ClusterComputeResource/resourcePool/@xlink:href))]]></filterExpression>
+  </definition>
+
+  <definition>
+    <model>ResourcePool</model>
+    <property>resourcePool</property>
+    <type>id</type>
+    <multipleCardinality>true</multipleCardinality>
+  </definition>
+
+  <definition>
+    <model>ResourcePool</model>
+    <property>parent</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/ResourcePool[vim25:parent/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>ResourcePool</model>
+    <property>dc</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType($target[node-name(.)=xs:QName("ResourcePool")], xs:QName("Datacenter")), "dc")]]></selectExpression>
+    <filterTemplate><![CDATA[local:getDescendantsOfType(%s, xs:QName("ResourcePool"))]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>ResourcePool</model>
+    <property>cluster</property>
+    <type>id</type>
+    <selectExpression><![CDATA[local:toReference(local:getAncestorsOfType($target, xs:QName("ClusterComputeResource" )), "cluster")]]></selectExpression>
+    <filterTemplate><![CDATA[local:getDescendantsOfType(%s, xs:QName("ResourcePool"))]]></filterTemplate>
+  </definition>
+
+  <definition>
+    <model>ResourcePool</model>
+    <property>owner</property>
+    <type>id</type>
+    <filterTemplate><![CDATA[/ResourcePool[vim25:owner/@xlink:href=%s/@qs:resource]]]></filterTemplate>
+  </definition>
+</properties>

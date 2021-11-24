@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: Analytics VMODL2 API
+Implementation-Version: 7.0.2
+Archiver-Version: Plexus Archiver
+Built-By: mts
+VMwareBuildNumber: 18353540
+Implementation-Vendor-Id: com.vmware.ph.platform
+VMwareCLN: 9102561
+Created-By: Apache Maven 3.2.5
+Build-Jdk: 1.8.0_221
+Implementation-Vendor: VMware, Inc.
+

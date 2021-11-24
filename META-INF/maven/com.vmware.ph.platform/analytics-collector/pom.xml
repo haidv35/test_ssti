@@ -1,0 +1,152 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <groupId>com.vmware.ph.platform</groupId>
+      <artifactId>phservice</artifactId>
+      <version>dev</version>
+   </parent>
+
+   <artifactId>analytics-collector</artifactId>
+   <version>${product.version}</version>
+   <packaging>jar</packaging>
+   <description>Analytics Common Collector</description>
+
+   <dependencies>
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-common</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-cdf</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-vmomi</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <!-- Used for the mapping part of collection -->
+      <dependency>
+         <groupId>org.apache.velocity</groupId>
+         <artifactId>velocity</artifactId>
+      </dependency>
+
+      <!-- Logging -->
+      <dependency>
+         <groupId>commons-logging</groupId>
+         <artifactId>commons-logging</artifactId>
+      </dependency>
+      <!-- End of Logging -->
+
+      <dependency>
+         <groupId>io.github.resilience4j</groupId>
+         <artifactId>resilience4j-timelimiter</artifactId>
+      </dependency>
+
+      <!-- Test -->
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-all</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.awaitility</groupId>
+         <artifactId>awaitility</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- Powermock -->
+      <!-- TODO Remove Powermock dependencies -->
+      <dependency>
+         <groupId>org.powermock</groupId>
+         <artifactId>powermock-module-testng</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.powermock</groupId>
+         <artifactId>powermock-api-mockito</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <!-- End of Powermock -->
+
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-test</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>vim-vmodl-bindings</artifactId>
+         <version>${product.version}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>vsan-vmodl-bindings</artifactId>
+         <version>${product.version}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>nl.jqno.equalsverifier</groupId>
+         <artifactId>equalsverifier</artifactId>
+         <version>2.4</version>
+         <scope>test</scope>
+      </dependency>
+
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin><!-- build *-sources.jar-->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <skipTests>false</skipTests>
+            </configuration>
+         </plugin>
+         <plugin><!-- build effective_pom.xml-->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-help-plugin</artifactId>
+         </plugin>
+         <plugin><!-- build effective_pom_filtered.xml-->
+            <groupId>com.vmware.ph.maven.plugins</groupId>
+            <artifactId>xml-filter-maven-plugin</artifactId>
+         </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <debug>true</debug>
+               <debuglevel>lines,vars,source</debuglevel>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+</project>

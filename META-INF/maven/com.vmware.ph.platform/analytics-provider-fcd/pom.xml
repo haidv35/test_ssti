@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.vmware.ph.platform</groupId>
+    <artifactId>phservice</artifactId>
+    <version>dev</version>
+  </parent>
+
+  <artifactId>analytics-provider-fcd</artifactId>
+  <version>${product.version}</version>
+  <name>analytics-provider-fcd</name>
+  <description>Analytics provider for FCD</description>
+
+  <dependencies>
+
+      <!-- Provider API -->
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-common-vim</artifactId>
+         <version>${product.version}</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- VMODL bindings -->
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>vim-vmodl-bindings</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+      <!-- End of VMODL bindings -->
+
+      <!-- Logging -->
+      <dependency>
+         <groupId>commons-logging</groupId>
+         <artifactId>commons-logging</artifactId>
+      </dependency>
+      <!-- End of Logging -->
+
+      <!-- Unit Test Dependency -->
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.powermock</groupId>
+         <artifactId>powermock-module-testng</artifactId>
+         <scope>test</scope>
+	  </dependency>
+
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-all</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.powermock</groupId>
+         <artifactId>powermock-api-mockito</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- End of Test Dependency -->
+
+  </dependencies>
+</project>

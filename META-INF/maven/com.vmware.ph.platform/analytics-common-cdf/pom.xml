@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <groupId>com.vmware.ph.platform</groupId>
+      <artifactId>phservice</artifactId>
+      <version>dev</version>
+   </parent>
+
+   <artifactId>analytics-common-cdf</artifactId>
+   <version>${product.version}</version>
+   <packaging>jar</packaging>
+   <description>Analytics CDF common libraries</description>
+
+   <dependencies>
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>ph-api-serialization</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.vmware.vlsi</groupId>
+        <artifactId>vlsi-core</artifactId>
+      </dependency>
+
+      <!-- For CDF20 serialization -->
+      <dependency>
+         <groupId>org.json</groupId>
+         <artifactId>json</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-databind</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>commons-lang</groupId>
+         <artifactId>commons-lang</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>ph-api-interfaces</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- TEST -->
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>vim-vmodl-bindings</artifactId>
+         <version>${product.version}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-common-vmomi</artifactId>
+         <version>${product.version}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-core</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <!-- End of TEST -->
+
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin><!-- build *-sources.jar-->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+         </plugin>
+         <plugin><!-- build effective_pom.xml-->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-help-plugin</artifactId>
+         </plugin>
+         <plugin><!-- build effective_pom_filtered.xml-->
+            <groupId>com.vmware.ph.maven.plugins</groupId>
+            <artifactId>xml-filter-maven-plugin</artifactId>
+         </plugin>
+
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+         </plugin>
+      </plugins>
+   </build>
+</project>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VMware Confidential 2014-2015 VMware, Inc. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>com.vmware.ph.platform</groupId>
+      <artifactId>vmodl2-bindings-parent</artifactId>
+      <version>dev</version>
+   </parent>
+
+   <artifactId>analytics-vmodl2-bindings</artifactId>
+   <name>Analytics VMODL2 API</name>
+   <version>${product.version}</version>
+   <packaging>jar</packaging>
+   <description>This POM builds the Analytics VMODL2 API bindings.</description>
+
+   <profiles>
+      <profile>
+         <id>windows</id>
+         <activation>
+            <os>
+               <family>windows</family>
+            </os>
+         </activation>
+         <properties>
+            <idl.java.generator>${vapi.core.root}/java-toolkit/bin/java-generator.bat</idl.java.generator>
+            <idl.metadata.generator>${vapi.core.root}/metadata-toolkit/bin/metadata-generator.bat</idl.metadata.generator>
+         </properties>
+      </profile>
+
+      <profile>
+         <id>linux</id>
+         <activation>
+            <os>
+               <family>unix</family>
+            </os>
+         </activation>
+         <properties>
+            <idl.java.generator>${vapi.core.root}/java-toolkit/bin/java-generator</idl.java.generator>
+            <idl.metadata.generator>${vapi.core.root}/metadata-toolkit/bin/metadata-generator</idl.metadata.generator>
+         </properties>
+      </profile>
+   </profiles>
+
+   <properties>
+      <vmodl2-src>${project.parent.parent.basedir}/vmodl2</vmodl2-src>
+
+      <idl.vmidl>${vapi.core.root}/idl-toolkit/models/com.vmware.vapi.std.vmidl</idl.vmidl>
+      <idl.packageList>${vmodl2-src}</idl.packageList>
+      <idl.productName>AnalyticsVmodl2</idl.productName>
+   </properties>
+
+   <dependencies>
+      <dependency>
+         <groupId>com.vmware.vapi</groupId>
+         <artifactId>vapi-runtime</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>commons-lang</groupId>
+         <artifactId>commons-lang</artifactId>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <!-- Prepare VMODL2 generators -->
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>Prepare vmodl2 generators</id>
+                  <phase>generate-sources</phase>
+                  <configuration>
+                     <tasks>
+                        <chmod file="${idl.java.generator}" perm="a+x" />
+                        <chmod file="${idl.metadata.generator}" perm="a+x" />
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+
+         <!-- Generate VMODL2 bindings -->
+         <plugin>
+           <groupId>org.codehaus.mojo</groupId>
+           <artifactId>exec-maven-plugin</artifactId>
+           <executions>
+              <!-- Generate VMODL2 bindings -->
+              <execution>
+                 <id>Generate VMODL2 bindings</id>
+                 <phase>generate-sources</phase>
+                 <configuration>
+                    <executable>${idl.java.generator}</executable>
+                    <workingDirectory>${vapi.core.root}/java-toolkit/bin</workingDirectory>
+                    <sourceRoot>${project.build.directory}/generated-sources/java</sourceRoot>
+                    <arguments>
+                       <argument>--debug</argument>
+                       <argument>--library</argument>
+                       <argument>${idl.vmidl}</argument>
+                       <argument>--package-suffix</argument>
+                       <argument>vapi</argument>
+                       <argument>--output</argument>
+                       <argument>${project.build.directory}/generated-sources</argument>
+                       <argument>${idl.packageList}</argument>
+                    </arguments>
+                 </configuration>
+                 <goals>
+                    <goal>exec</goal>
+                 </goals>
+              </execution>
+           </executions>
+        </plugin>
+      </plugins>
+   </build>
+</project>

@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>com.vmware.ph.platform</groupId>
+      <artifactId>phservice</artifactId>
+      <version>dev</version>
+   </parent>
+
+   <artifactId>analytics-service</artifactId>
+   <version>${product.version}</version>
+   <packaging>jar</packaging>
+   <description>Module with setup configuration for the Analytics Service</description>
+
+   <dependencies>
+      <!-- Projects -->
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-resourcebundle</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-provider-vsphere</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-ceip-server</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-push-telemetry-server</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-push-telemetry-vcenter</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-cloud-health</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-cloud-dataapp-server</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-cloud-dataapp-vsan</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>payload-audit</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>analytics-vmodl2-bindings</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.cis.data</groupId>
+         <artifactId>ds-vmodl2-bindings</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <!-- End of Projects -->
+
+      <!-- Other VMware Projects -->
+
+      <dependency>
+         <groupId>com.vmware.vlsi</groupId>
+         <artifactId>vlsi-client</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.vlsi</groupId>
+         <artifactId>vlsi-core</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.vlsi</groupId>
+         <artifactId>vlsi-server</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.vlsi</groupId>
+         <artifactId>emitter</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.vlsi</groupId>
+         <artifactId>emitter-vmodl</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.vlsi</groupId>
+         <artifactId>query-vmodl</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.vlsi</groupId>
+         <artifactId>reflect-vmodl</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>vim-vmodl-bindings</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>license-cis-vmodl-bindings</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>cls-vmodl2-bindings</artifactId>
+         <version>${product.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.sso</groupId>
+         <artifactId>samltoken</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.sso</groupId>
+         <artifactId>wstClient</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.sso</groupId>
+         <artifactId>lookupservice-bindings-client</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.sso</groupId>
+         <artifactId>sso-adminserver-client-bindings</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.af</groupId>
+         <artifactId>vmware-authentication-framework</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.ph.platform</groupId>
+         <artifactId>ph-gc-vmodl-bindings</artifactId>
+      </dependency>
+
+       <!-- TODO Remove once we switch to log4j2 for logging -->
+      <dependency>
+         <groupId>com.vmware</groupId>
+         <artifactId>custom-rolling-file-appender</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- End of Other VMware Projects -->
+
+      <!-- Common OSS jars -->
+
+      <dependency>
+         <groupId>commons-codec</groupId>
+         <artifactId>commons-codec</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>commons-collections</groupId>
+         <artifactId>commons-collections</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-collections4</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-compress</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>commons-io</groupId>
+         <artifactId>commons-io</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>commons-lang</groupId>
+         <artifactId>commons-lang</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-lang3</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>commons-logging</groupId>
+         <artifactId>commons-logging</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.vmware.vim</groupId>
+         <artifactId>featureStateSwitch</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.google.guava</groupId>
+         <artifactId>guava</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.apache.httpcomponents</groupId>
+         <artifactId>httpasyncclient</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.httpcomponents</groupId>
+         <artifactId>httpclient</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.httpcomponents</groupId>
+         <artifactId>httpcore</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.httpcomponents</groupId>
+         <artifactId>httpcore-nio</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.httpcomponents</groupId>
+         <artifactId>httpmime</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-annotations</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-core</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-databind</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- used by NoOpServlet & CEIP Servlet -->
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-beans</artifactId>
+         <version>${spring.version}</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-expression</artifactId>
+         <version>${spring.version}</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-aop</artifactId>
+         <version>${spring.version}</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-webmvc</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-core</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-web</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-context</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.apache.velocity</groupId>
+         <artifactId>velocity</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>log4j</groupId>
+         <artifactId>log4j</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.apache.logging.log4j</groupId>
+         <artifactId>log4j-core</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>net.java.dev.jna</groupId>
+         <artifactId>jna</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>net.java.dev.jna</groupId>
+         <artifactId>jna-platform</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>io.opentracing</groupId>
+         <artifactId>opentracing-api</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>io.opentracing</groupId>
+         <artifactId>opentracing-util</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>io.opentracing</groupId>
+         <artifactId>opentracing-noop</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>io.jaegertracing</groupId>
+         <artifactId>jaeger-core</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>io.jaegertracing</groupId>
+         <artifactId>jaeger-thrift</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.apache.thrift</groupId>
+         <artifactId>libthrift</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+          <scope>provided</scope>
+      </dependency>
+
+      <!-- TEST -->
+
+      <!-- Web Server -->
+      <dependency>
+         <groupId>org.apache.tomcat.embed</groupId>
+         <artifactId>tomcat-embed-core</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-core</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+       <dependency>
+           <groupId>org.springframework</groupId>
+           <artifactId>spring-test</artifactId>
+           <scope>test</scope>
+       </dependency>
+
+       <dependency>
+           <groupId>com.github.tomakehurst</groupId>
+           <artifactId>wiremock-standalone</artifactId>
+           <scope>test</scope>
+       </dependency>
+
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+          <scope>test</scope>
+      </dependency>
+
+   </dependencies>
+
+   <build>
+      <testResources>
+         <!-- Needed for tests, but we don't want them in the jars!!! -->
+         <testResource>
+            <directory>${project.basedir}/src/main/config</directory>
+         </testResource>
+         <testResource>
+            <directory>${project.basedir}/src/test/resources</directory>
+         </testResource>
+      </testResources>
+
+      <plugins>
+         <plugin><!-- build effective_pom.xml-->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-help-plugin</artifactId>
+         </plugin>
+
+         <plugin><!-- build effective_pom_filtered.xml-->
+            <groupId>com.vmware.ph.maven.plugins</groupId>
+            <artifactId>xml-filter-maven-plugin</artifactId>
+         </plugin>
+
+         <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+               <finalName>${project.artifactId}</finalName>
+               <descriptors>
+                  <descriptor>src/main/assembly/main.xml</descriptor>
+                  <descriptor>src/main/assembly/patch.xml</descriptor>
+               </descriptors>
+            </configuration>
+            <executions>
+               <execution>
+                  <id>make-assembly</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>single</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+</project>

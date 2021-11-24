@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+definition must contain the following nodes:
+- name: specifies the name of the function
+- expression: the implementation of the function
+-->
+<functions>
+  <definition>
+    <name>local:whichOneIsAncestor</name>
+    <expression>
+    <![CDATA[
+      declare function local:whichOneIsAncestor($node, $potentialAncestors) {
+         let $result :=
+            if (empty($node) or
+                empty($potentialAncestors)) then
+               ()
+            else
+               let $index := index-of($potentialAncestors, $node)
+               return if ($index) then
+                  $potentialAncestors[$index]
+               else
+                  local:whichOneIsAncestor($node/.., $potentialAncestors)
+         return $result
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:returnnode</name>
+    <expression>
+    <![CDATA[
+      declare function local:returnnode($baseNodes, $node, $path) {
+         let $ret := if (empty($node))
+         then ()
+         else if ($node instance of element()) then
+                  let $baseNode := if (count($baseNodes) = 1) then
+                        $baseNodes
+                     else if (count($baseNodes) = 0) then
+                        ()
+                     else
+                        local:whichOneIsAncestor($node, $baseNodes)
+                  let $docResourceType := $baseNode/@qs:resourceType
+                  let $docVapiName := $baseNode/@vapi:name
+
+                  (: we need to be extra careful to not add docProvider and generation to synthetic properties :)
+                  let $root := fn:root($node)
+                  let $docProviderId := if ($root instance of document-node()) then $root/*[1]/@qs:id else ()
+                  let $generationAttr := for $attr in xhive:metadata($root, 'generation')
+                      return attribute { "query:generation" } { $attr }
+                  let $typeInfo := if ($root instance of document-node())
+                        then fn:string-join($node/ancestor-or-self::*[. != $root]/fn:string(@xsi:type), ";")
+                        else ()
+
+                  return element { $path } {
+                     if ($docResourceType) then attribute { "query:docResourceType" } { $docResourceType } else (),
+                     if ($docVapiName) then attribute { "query:docVapiName" } { $docVapiName } else (),
+                     if ($docProviderId) then attribute { "query:docProvider" } { $docProviderId } else (),
+                     if (not(empty($typeInfo))) then attribute { "query:typeInfo" } { $typeInfo } else (),
+                     $generationAttr,
+                     $node/@*,
+                     $node/node()
+                  }
+              else if ($node instance of element()+)
+                   then for $child in $node return local:returnnode($baseNodes, $child, $path)
+              else if ($node instance of node()+)
+                   then for $child in $node
+                        return element { $path } { $child/node() }
+              else element { $path } { $node }
+         return $ret
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getAncestorsOfType_vAppStyle</name>
+    <expression>
+    <![CDATA[
+      declare function local:getAncestorsOfType_vAppStyle($doc, $type as xs:QName+) {
+         let $parents := (local:product('vpx')/vim25:*[@qs:id=$doc/parent/@xlink:href],
+                          local:product('vpx')//Folder[@qs:id=$doc/parentFolder/@xlink:href],
+                          local:product('vpx')//VirtualApp[@qs:id=$doc/parentVApp/@xlink:href])
+
+         return if ($parents)
+                then distinct-nodes( ($parents[node-name(.) = $type], local:getAncestorsOfType_vAppStyle($parents, $type)) )
+                else ()
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getComputeResourceDescendants</name>
+    <expression>
+    <![CDATA[
+      declare function local:getComputeResourceDescendants($doc, $type as xs:QName+) {
+         let $childContainers := local:product('vpx')/vim25:*[parent/@xlink:href=$doc/@qs:id and (node-name(.)=(
+                                                QName("urn:vim25", "Datacenter"))
+                   or (node-name(.)=(QName("urn:vim25", "Folder")) and (childType="ComputeResource" or childType="Datacenter")))]
+         let $finalClusters := if ($type = (QName("urn:vim25", "ComputeResource"), QName("urn:vim25", "ClusterComputeResource")))
+         then (local:product('vpx')/vim25:*[node-name(.)=$type and parent/@xlink:href=$doc/@qs:id])
+         else ()
+
+         return if ($childContainers)
+                then distinct-nodes( ($finalClusters, local:getComputeResourceDescendants($childContainers, $type)) )
+                else if ($finalClusters)
+                     then $finalClusters
+                     else ()
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:toReference</name>
+    <expression>
+    <![CDATA[
+      declare function local:toReference($doc, $path as xs:string) {
+         let $ret := if (not($doc))
+         then ()
+         else if ($doc instance of element())
+              then
+                   element {$path} {
+                     attribute xlink:type {"simple"},
+                     attribute xlink:href {($doc/@qs:resource,$doc/@qs:id)[1]}
+                   }
+              else if ($doc instance of element()+)
+                   then for $resource in fn:distinct-values(($doc/@qs:resource, $doc[not(@qs:resource)]/@qs:id))
+                        return element {$path} {
+                           attribute xlink:type {"simple"},
+                           attribute xlink:href {$resource}
+                        }
+                   else ()
+         return $ret
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getDescendantVms_Dc</name>
+    <expression>
+    <![CDATA[
+      declare function local:getDescendantVms_Dc($doc) {
+         let $childFolders := local:product('vpx')//Folder[parent/@xlink:href=$doc/@qs:id]
+         let $vmFolders := $childFolders[childType="VirtualMachine"]
+         let $hostFolders := $childFolders[childType="ComputeResource"]
+
+         let $hostFolderedVms := local:getDescendantVms_HostFolder($hostFolders)
+         return if ($vmFolders)
+                then distinct-nodes( ($hostFolderedVms, local:getDescendantVms_VmFolder($vmFolders)) )
+                else $hostFolderedVms
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:product</name>
+    <expression>
+    <![CDATA[
+      declare function local:product($v as xs:string) external;
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getDescendantVms_HostFolder</name>
+    <expression>
+    <![CDATA[
+      declare function local:getDescendantVms_HostFolder($doc) {
+         let $childCrs := (local:product('vpx')//ComputeResource[parent/@xlink:href=$doc/@qs:id], local:product('vpx')//ClusterComputeResource[parent/@xlink:href=$doc/@qs:id])
+         let $childFolders := local:product('vpx')//Folder[parent/@xlink:href=$doc/@qs:id]
+
+         let $childVms := local:getDescendantVms_Cr($childCrs)
+         return if ($childFolders)
+                then ($childVms, local:getDescendantVms_HostFolder($childFolders))
+                else $childVms
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getDescendantVms_Rp</name>
+    <expression>
+    <![CDATA[
+      declare function local:getDescendantVms_Rp($doc) {
+         let $childRps := (local:product('vpx')//ResourcePool[parent/@xlink:href=$doc/@qs:id],
+                           local:product('vpx')//VirtualApp[parent/@xlink:href=$doc/@qs:id])
+         let $childVms := local:product('vpx')//VirtualMachine[resourcePool/@xlink:href=$doc/@qs:id]
+
+         return if ($childRps)
+                then ($childVms, local:getDescendantVms_Rp($childRps))
+                else $childVms
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getDescendantVms_VmFolder</name>
+    <expression>
+    <![CDATA[
+      declare function local:getDescendantVms_VmFolder($doc) {
+         let $childFolders := local:product('vpx')//Folder[parent/@xlink:href=$doc/@qs:id]
+         let $childVms :=local:product('vpx')//VirtualMachine[parent/@xlink:href=$doc/@qs:id]
+
+         return if ($childFolders)
+                then ($childVms, local:getDescendantVms_VmFolder($childFolders))
+                else $childVms
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getDescendantVms_Cr</name>
+    <expression>
+    <![CDATA[
+      declare function local:getDescendantVms_Cr($doc) {
+         let $childRPs := local:product('vpx')//ResourcePool[parent/@xlink:href=$doc/@qs:id]
+
+         return local:getDescendantVms_Rp($childRPs)
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getAncestorsOfType</name>
+    <expression>
+    <![CDATA[
+      declare function local:getAncestorsOfType($doc, $type as xs:QName+) {
+         let $parents := local:product('vpx')/vim25:*[@qs:id=$doc/parent/@xlink:href]
+         return if ($parents)
+                then ($parents[node-name(.) = $type], local:getAncestorsOfType($parents, $type))
+                else ()
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getDescendantsOfType</name>
+    <expression>
+    <![CDATA[
+      declare function local:getDescendantsOfType($doc, $type as xs:QName+) {
+         let $containerTypes := local:getContainerTypes()
+         let $leafTypes := local:getLeafTypes()
+         let $childContainers := local:product('vpx')/vim25:*[node-name(.) = $containerTypes and parent/@xlink:href = $doc/@qs:id]
+         let $childLeaves := if ($type = $leafTypes)
+               then local:product('vpx')/vim25:*[node-name(.) = $leafTypes and parent/@xlink:href = $doc/@qs:id]
+                             else ()
+
+         return if ($childContainers)
+         then ($childContainers[node-name(.) = $type], $childLeaves[node-name(.) = $type], local:getDescendantsOfType($childContainers, $type))
+         else if ($childLeaves)
+              then $childLeaves[node-name(.)=$type]
+              else ()
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getLeafTypes</name>
+    <expression>
+    <![CDATA[
+      declare function local:getLeafTypes() as xs:QName* {
+         let $leafTypes := (QName("urn:vim25", "VirtualMachine"),
+                            QName("urn:vim25", "HostSystem"),
+                            QName("urn:vim25", "Network"),
+                            QName("urn:vim25", "DistributedVirtualSwitch"),
+                            QName("urn:vim25", "VmwareDistributedVirtualSwitch"),
+                            QName("urn:vim25", "DistributedVirtualPortgroup"),
+                            QName("urn:vim25", "Datastore"))
+         return $leafTypes
+      };
+    ]]>
+    </expression>
+  </definition>
+
+  <definition>
+    <name>local:getContainerTypes</name>
+    <expression>
+    <![CDATA[
+      declare function local:getContainerTypes() as xs:QName* {
+         let $containerTypes := (QName("urn:vim25", "Folder"),
+                                 QName("urn:vim25", "Datacenter"),
+                                 QName("urn:vim25", "StoragePod"),
+                                 QName("urn:vim25", "ComputeResource"),
+                                 QName("urn:vim25", "ClusterComputeResource"),
+                                 QName("urn:vim25", "ResourcePool"),
+                                 QName("urn:vim25", "VirtualApp"))
+         return $containerTypes
+      };
+    ]]>
+    </expression>
+  </definition>
+</functions>
